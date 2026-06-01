@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  # 1. Isolated Database Service
+  db:
+    image: postgres:15-alpine
+    container_name: voting-db
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: secretpassword
+      POSTGRES_DB: cloud_votes
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    networks:
+      - backend-net
+    restart: always
+
+  # 2. Python Flask Voting Frontend
+  voting-app:
+    build: ./voting-app
+    container_name: voting-frontend
+    ports:
+      - "5000:5000"
+    environment:
+      - DB_HOST=db
+      - DB_USER=admin
+      - DB_PASS=secretpassword
+      - DB_NAME=cloud_votes
+    depends_on:
+      - db
+    networks:
+      - frontend-net
+      - backend-net
+    restart: always
+
+  # 3. Python Flask Results Dashboard
+  results-app:
+    build: ./results-app
+    container_name: voting-dashboard
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_HOST=db
+      - DB_USER=admin
+      - DB_PASS=secretpassword
+      - DB_NAME=cloud_votes
+    depends_on:
+      - db
+    networks:
+      - frontend-net
+      - backend-net
+    restart: always
+
+volumes:
+  pg-data:
+
+networks:
+  frontend-net:
+    driver: bridge
+  backend-net:
+    driver: bridge
