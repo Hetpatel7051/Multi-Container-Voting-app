@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  # 1. Isolated Database Service
+
   db:
     image: postgres:15-alpine
     container_name: voting-db
@@ -15,7 +15,7 @@ services:
       - backend-net
     restart: always
 
-  # 2. Python Flask Voting Frontend
+
   voting-app:
     build: ./voting-app
     container_name: voting-frontend
@@ -33,7 +33,7 @@ services:
       - backend-net
     restart: always
 
-  # 3. Python Flask Results Dashboard
+ 
   results-app:
     build: ./results-app
     container_name: voting-dashboard
