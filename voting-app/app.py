@@ -5,7 +5,6 @@ import time
 
 app = Flask(__name__)
 
-# Wait for DB to wake up and connect
 def get_db_connection():
     while True:
         try:
@@ -20,7 +19,7 @@ def get_db_connection():
             print("Waiting for database connection...")
             time.sleep(1)
 
-# Initialize Table
+
 conn = get_db_connection()
 cur = conn.cursor()
 cur.execute("CREATE TABLE IF NOT EXISTS votes (id SERIAL PRIMARY KEY, candidate TEXT);")
